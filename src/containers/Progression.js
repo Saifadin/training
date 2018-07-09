@@ -13,6 +13,7 @@ const Wrapper = styled('div')`
   background-color: #292929;
   color: #ffffff;
   padding: 8px 45px 30px;
+  margin-bottom: 52px;
 `;
 
 const ProgressionLine = styled('div')`
@@ -58,38 +59,63 @@ const ProgressionSteps = styled('div')`
   }
 `;
 
-const Progression = () => {
-  const activeTask = [
-    {
-      name: 'Build out your page',
-      done: true,
-      active: false,
-    },
-    {
-      name: 'Rev up your page',
-      done: true,
-      active: false,
-    },
-    {
-      name: 'Reach your clients and referral partners',
-      done: false,
-      active: true,
-      todos: ['Get out there and use it', 'Pitch it'],
-    },
-  ];
-  return (
-    <Wrapper>
-      <ProgressionLine progression={50} />
-      <ProgressionSteps>
-        <TrainingBox title="Cycle 2">Designing your brand</TrainingBox>
-        <CountCircle count={1} description="Your image" isDone />
-        <CountCircle count={2} description="Social media sells" isDone />
-        <CurrentSession count={3} title="Know your progresses and programs" tasks={activeTask} />
-        <CountCircle count={4} />
-        <CountCircle count={5} description="Understand your market to explode your business" />
-      </ProgressionSteps>
-    </Wrapper>
-  );
-};
+const activeTask = [
+  {
+    name: 'Build out your page',
+    done: true,
+    active: false,
+  },
+  {
+    name: 'Rev up your page',
+    done: true,
+    active: false,
+  },
+  {
+    name: 'Reach your clients and referral partners',
+    done: false,
+    active: true,
+    todos: ['Get out there and use it', 'Pitch it'],
+  },
+];
+
+class Progression extends React.Component {
+  state = {
+    showTasks: 3,
+  };
+
+  handleClick = id => {
+    this.setState({
+      showTasks: id,
+    });
+  };
+
+  render() {
+    const { showTasks } = this.state;
+    return (
+      <Wrapper>
+        <ProgressionLine progression={50} />
+        <ProgressionSteps>
+          <TrainingBox title="Cycle 2">Designing your brand</TrainingBox>
+          <CountCircle count={1} description="Your image" isDone showTasks={showTasks === 1} onClick={() => this.handleClick(1)} />
+          <CountCircle count={2} description="Social media sells" isDone showTasks={showTasks === 2} onClick={() => this.handleClick(2)} />
+          <CurrentSession
+            count={3}
+            title="Know your progresses and programs"
+            tasks={activeTask}
+            showTasks={showTasks === 3}
+            onClick={() => this.handleClick(3)}
+          />
+          <CountCircle count={4} showTasks={showTasks === 4} onClick={() => this.handleClick(4)} />
+          <CountCircle
+            count={5}
+            description="Understand your market to explode your business"
+            showTasks={showTasks === 5}
+            onClick={() => this.handleClick(5)}
+          />
+        </ProgressionSteps>
+      </Wrapper>
+    );
+  }
+}
 
 export default Progression;

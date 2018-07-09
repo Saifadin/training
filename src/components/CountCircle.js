@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'react-emotion';
+import DoneSession from './DoneSession';
 
 const Wrapper = styled('div')`
   display: flex;
@@ -15,6 +16,10 @@ const Wrapper = styled('div')`
 
 const styles = {
   active: {
+    bg: '#ffffff',
+    color: '#0fc440',
+  },
+  activeNoTasksShown: {
     bg: '#0fc440',
     color: '#ffffff',
   },
@@ -25,6 +30,7 @@ const styles = {
 };
 
 export const Circle = styled('div')`
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,12 +42,14 @@ export const Circle = styled('div')`
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 8px;
-  color: ${({ isDone, isActive }) => {
+  color: ${({ isDone, isActive, showTasks }) => {
+    if (isActive && !showTasks) return styles['activeNoTasksShown'].color;
     if (isActive) return styles['active'].color;
     if (isDone) return styles['done'].color;
     return '#292929';
   }};
-  background-color: ${({ isDone, isActive }) => {
+  background-color: ${({ isDone, isActive, showTasks }) => {
+    if (isActive && !showTasks) return styles['activeNoTasksShown'].bg;
     if (isActive) return styles['active'].bg;
     if (isDone) return styles['done'].bg;
     return '#ffffff';
@@ -49,12 +57,15 @@ export const Circle = styled('div')`
   @media screen and (max-width: 768px) {
     margin-bottom: 0;
   }
+  &:hover {
+    box-shadow: 0 2px 22px 0 rgba(44, 168, 255, 0.55);
+  }
 `;
 
 const Description = styled('div')`
   width: 100%;
   text-align: center;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(235, 236, 241, 0.5);
   line-height: 1.25;
   font-weight: 500;
   @media screen and (max-width: 768px) {
@@ -65,10 +76,24 @@ const Description = styled('div')`
   }
 `;
 
-const CountCircle = ({ className, count, description, isDone, isActive }) => {
-  return (
+const doneTasks = [
+  {
+    name: 'Strategies to work with top agents',
+  },
+  {
+    name: 'Pitch it',
+  },
+  {
+    name: 'Know what to delegate',
+  },
+];
+
+const CountCircle = ({ className, count, description = '', isDone, isActive, onClick, showTasks }) => {
+  return showTasks ? (
+    <DoneSession title={`${count} - ${description}`} tasks={doneTasks} />
+  ) : (
     <Wrapper className={className}>
-      <Circle isDone={isDone} isActive={isActive}>
+      <Circle isDone={isDone} isActive={isActive} onClick={onClick}>
         {count}
       </Circle>
       <Description>{description}</Description>
